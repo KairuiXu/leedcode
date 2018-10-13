@@ -1,0 +1,1 @@
+Linked List : copy some essential node in case it gets lost.  head.next= recursive(); while(a!=null);
