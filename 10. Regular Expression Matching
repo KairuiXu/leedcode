@@ -1,0 +1,50 @@
+/*
+Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*'.
+
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+The matching should cover the entire input string (not partial)
+*/
+
+
+
+public class RegularExpressionMatching {
+    public static boolean isMatch(String s, String p) {
+    	p=prune(p);
+    	char[] schar = s.toCharArray();
+    	char[] pchar = p.toCharArray();
+    	return charisMatch(schar,pchar,0,0);
+
+    }
+	private static boolean charisMatch(char[] schar, char[] pchar, int i, int j) {
+		if(i==schar.length) {
+			if(j==pchar.length)
+				return true;
+			else if(j<pchar.length-1 && pchar[j+1]=='*')
+				return charisMatch(schar,pchar,i,j+2);
+			else return false;
+		}
+		if(j==pchar.length)
+			return false;
+		if(j<pchar.length-1 && pchar[j+1]=='*') {
+			if(schar[i]==pchar[j] || pchar[j]=='.')
+				return charisMatch(schar,pchar,i,j+2)||charisMatch(schar,pchar,i+1,j+2)||charisMatch(schar,pchar,i+1,j);
+			else
+				return charisMatch(schar,pchar,i,j+2);
+		}
+		if(schar[i]==pchar[j] || pchar[j]=='.')
+			return charisMatch(schar,pchar,++i,++j);
+		else
+			return false;
+	}
+	private static String prune(String p) {
+		int i=0;
+		while(i<p.length()-2) {
+			if(p.charAt(i+1)=='*' && p.charAt(i+2)==p.charAt(i) && p.length()-i>3 && p.charAt(i+3)=='*') {
+						p=p.substring(0,i+2)+p.substring(i+4);
+			}
+			i++;
+		}
+		return p;
+	}
+}
